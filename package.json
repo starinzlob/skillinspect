@@ -1,0 +1,42 @@
+{
+  "name": "skillproof",
+  "version": "0.1.0",
+  "description": "Audit AI Agent Skills for quality, safety, portability, and installability.",
+  "type": "module",
+  "bin": {
+    "skillproof": "dist/src/cli.js"
+  },
+  "exports": "./dist/src/index.js",
+  "files": [
+    "dist/src",
+    "skills",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "check": "tsc -p tsconfig.json --noEmit",
+    "test": "npm run build && node --test dist/test/*.test.js",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "keywords": [
+    "agent-skills",
+    "codex",
+    "claude-code",
+    "security",
+    "linter",
+    "developer-tools"
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "yaml": "^2.8.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.15.0",
+    "typescript": "^5.8.3"
+  }
+}
