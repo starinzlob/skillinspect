@@ -7,9 +7,9 @@ SkillProof inspects a `SKILL.md` folder without executing its installation instr
 ## Quick start
 
 ```bash
-npx skillproof check ./skills/my-skill
-npx skillproof check . --smoke --strict
-npx skillproof check . --format github
+npx --yes github:starinzlob/skillproof check ./skills/my-skill
+npx --yes github:starinzlob/skillproof check . --smoke --strict
+npx --yes github:starinzlob/skillproof check . --format github
 ```
 
 Use `--profile codex` for strict Codex metadata or `--profile portable` for cross-agent packages with additional standard frontmatter fields.
@@ -43,9 +43,9 @@ Grades are A (90+), B (80+), C (70+), D (60+), and F (below 60). Scores are a pr
 ## Commands
 
 ```bash
-skillproof check [path] [--profile codex|portable] [--format text|json|github]
-skillproof badge [path] [--output skillproof.svg]
-skillproof rules
+npx --yes github:starinzlob/skillproof check [path] [--profile codex|portable]
+npx --yes github:starinzlob/skillproof badge [path] [--output skillproof.svg]
+npx --yes github:starinzlob/skillproof rules
 ```
 
 Additional options:
@@ -58,7 +58,9 @@ If a directory contains multiple nested `SKILL.md` files, SkillProof reports eve
 
 ## GitHub Actions
 
-Copy [`examples/github-workflow.yml`](examples/github-workflow.yml) into `.github/workflows/skillproof.yml` after the npm package is published. Findings appear as native file annotations.
+Copy [`examples/github-workflow.yml`](examples/github-workflow.yml) into `.github/workflows/skillproof.yml`. It installs this GitHub repository directly and emits native file annotations.
+
+Use the GitHub-qualified command shown above. The unscoped `skillproof` name on npm belongs to an unrelated package.
 
 ## Agent Skill
 
