@@ -7,9 +7,9 @@ SkillInspect inspects a `SKILL.md` folder without executing its installation ins
 ## Quick start
 
 ```bash
-npx --yes github:starinzlob/skillinspect check ./skills/my-skill
-npx --yes github:starinzlob/skillinspect check . --smoke --strict
-npx --yes github:starinzlob/skillinspect check . --format github
+npx --yes skillinspect check ./skills/my-skill
+npx --yes skillinspect check . --smoke --strict
+npx --yes skillinspect check . --format github
 ```
 
 Use `--profile codex` for strict Codex metadata or `--profile portable` for cross-agent packages with additional standard frontmatter fields.
@@ -43,9 +43,9 @@ Grades are A (90+), B (80+), C (70+), D (60+), and F (below 60). Scores are a pr
 ## Commands
 
 ```bash
-npx --yes github:starinzlob/skillinspect check [path] [--profile codex|portable]
-npx --yes github:starinzlob/skillinspect badge [path] [--output skillinspect.svg]
-npx --yes github:starinzlob/skillinspect rules
+npx --yes skillinspect check [path] [--profile codex|portable]
+npx --yes skillinspect badge [path] [--output skillinspect.svg]
+npx --yes skillinspect rules
 ```
 
 Additional options:
@@ -60,7 +60,7 @@ If a directory contains multiple nested `SKILL.md` files, SkillInspect reports e
 
 Copy [`examples/github-workflow.yml`](examples/github-workflow.yml) into `.github/workflows/skillinspect.yml`. It installs this GitHub repository directly and emits native file annotations.
 
-Use the GitHub-qualified command shown above until the registry package is published. The unscoped `skillinspect` package name was available when this release was prepared.
+The CLI is published as the unscoped npm package [`skillinspect`](https://www.npmjs.com/package/skillinspect). To test an unreleased commit, use `npx --yes github:starinzlob/skillinspect` explicitly.
 
 ## Agent Skill
 
