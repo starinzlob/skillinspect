@@ -1,0 +1,4 @@
+interface:
+  display_name: "SkillInspect"
+  short_description: "Audit Agent Skills for quality, safety, and portability"
+  default_prompt: "Use $skillinspect to audit this Agent Skill and explain the highest-priority fixes."

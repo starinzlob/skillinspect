@@ -16,4 +16,4 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm test
-      - run: node dist/src/cli.js check skills/skillproof --profile codex --smoke --strict
+      - run: node dist/src/cli.js check skills/skillinspect --profile codex --smoke --strict

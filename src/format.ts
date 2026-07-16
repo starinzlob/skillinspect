@@ -43,7 +43,7 @@ export function formatGithub(report: WorkspaceReport): string {
     const line = item.location.line ? `,line=${item.location.line}` : "";
     return `::${level} file=${file}${line},title=${item.ruleId} ${escapeCommand(item.title)}::${escapeCommand(item.message)}`;
   }));
-  return lines.length ? lines.join("\n") : "SkillProof found no issues.";
+  return lines.length ? lines.join("\n") : "SkillInspect found no issues.";
 }
 
 export function badgeSvg(label: string, grade: string, score: number): string {

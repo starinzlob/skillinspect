@@ -6,7 +6,7 @@ import test from "node:test";
 import { analyzeTarget } from "../src/workspace.js";
 
 test("discovers multiple nested skills", () => {
-  const root = mkdtempSync(path.join(tmpdir(), "skillproof-workspace-"));
+  const root = mkdtempSync(path.join(tmpdir(), "skillinspect-workspace-"));
   try {
     for (const name of ["first-skill", "second-skill"]) {
       const skill = path.join(root, "skills", name);

@@ -1,4 +1,4 @@
-name: SkillProof
+name: SkillInspect
 
 on:
   pull_request:
@@ -13,4 +13,4 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: 22
-      - run: npx --yes github:starinzlob/skillproof check . --profile codex --format github --smoke --strict
+      - run: npx --yes github:starinzlob/skillinspect check . --profile codex --format github --smoke --strict

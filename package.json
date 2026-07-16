@@ -1,10 +1,10 @@
 {
-  "name": "skillproof",
+  "name": "skillinspect",
   "version": "0.1.0",
   "description": "Audit AI Agent Skills for quality, safety, portability, and installability.",
   "type": "module",
   "bin": {
-    "skillproof": "dist/src/cli.js"
+    "skillinspect": "dist/src/cli.js"
   },
   "exports": "./dist/src/index.js",
   "files": [

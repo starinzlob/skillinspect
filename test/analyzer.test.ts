@@ -8,7 +8,7 @@ import { analyzeSkill } from "../src/analyzer.js";
 const options = { profile: "codex" as const, smoke: true, ignoredRules: new Set<string>() };
 
 test("gives a clean skill an A grade", () => {
-  const parent = mkdtempSync(path.join(tmpdir(), "skillproof-good-"));
+  const parent = mkdtempSync(path.join(tmpdir(), "skillinspect-good-"));
   const root = path.join(parent, "good-skill");
   try {
     mkdirSync(path.join(root, "scripts"), { recursive: true });
@@ -31,7 +31,7 @@ Run \`scripts/check.sh\` to parse the local fixture.`, "utf8");
 });
 
 test("finds structural, security, and resource failures", () => {
-  const parent = mkdtempSync(path.join(tmpdir(), "skillproof-bad-"));
+  const parent = mkdtempSync(path.join(tmpdir(), "skillinspect-bad-"));
   const root = path.join(parent, "wrong-folder");
   try {
     mkdirSync(root, { recursive: true });

@@ -1,15 +1,15 @@
-# SkillProof
+# SkillInspect
 
 Static quality, safety, and portability checks for AI Agent Skills.
 
-SkillProof inspects a `SKILL.md` folder without executing its installation instructions or application code. It produces traceable findings, an A-F grade, GitHub annotations, and an optional badge.
+SkillInspect inspects a `SKILL.md` folder without executing its installation instructions or application code. It produces traceable findings, an A-F grade, GitHub annotations, and an optional badge.
 
 ## Quick start
 
 ```bash
-npx --yes github:starinzlob/skillproof check ./skills/my-skill
-npx --yes github:starinzlob/skillproof check . --smoke --strict
-npx --yes github:starinzlob/skillproof check . --format github
+npx --yes github:starinzlob/skillinspect check ./skills/my-skill
+npx --yes github:starinzlob/skillinspect check . --smoke --strict
+npx --yes github:starinzlob/skillinspect check . --format github
 ```
 
 Use `--profile codex` for strict Codex metadata or `--profile portable` for cross-agent packages with additional standard frontmatter fields.
@@ -43,9 +43,9 @@ Grades are A (90+), B (80+), C (70+), D (60+), and F (below 60). Scores are a pr
 ## Commands
 
 ```bash
-npx --yes github:starinzlob/skillproof check [path] [--profile codex|portable]
-npx --yes github:starinzlob/skillproof badge [path] [--output skillproof.svg]
-npx --yes github:starinzlob/skillproof rules
+npx --yes github:starinzlob/skillinspect check [path] [--profile codex|portable]
+npx --yes github:starinzlob/skillinspect badge [path] [--output skillinspect.svg]
+npx --yes github:starinzlob/skillinspect rules
 ```
 
 Additional options:
@@ -54,17 +54,17 @@ Additional options:
 - `--strict`: return a failing exit code for warnings;
 - `--ignore SP123`: suppress a reviewed rule ID, repeatable.
 
-If a directory contains multiple nested `SKILL.md` files, SkillProof reports every discovered Skill and an aggregate score.
+If a directory contains multiple nested `SKILL.md` files, SkillInspect reports every discovered Skill and an aggregate score.
 
 ## GitHub Actions
 
-Copy [`examples/github-workflow.yml`](examples/github-workflow.yml) into `.github/workflows/skillproof.yml`. It installs this GitHub repository directly and emits native file annotations.
+Copy [`examples/github-workflow.yml`](examples/github-workflow.yml) into `.github/workflows/skillinspect.yml`. It installs this GitHub repository directly and emits native file annotations.
 
-Use the GitHub-qualified command shown above. The unscoped `skillproof` name on npm belongs to an unrelated package.
+Use the GitHub-qualified command shown above until the registry package is published. The unscoped `skillinspect` package name was available when this release was prepared.
 
 ## Agent Skill
 
-An installable Skill is included at [`skills/skillproof`](skills/skillproof). It instructs an agent to prioritize release blockers, keep credential values redacted, and avoid executing untrusted Skill code.
+An installable Skill is included at [`skills/skillinspect`](skills/skillinspect). It instructs an agent to prioritize release blockers, keep credential values redacted, and avoid executing untrusted Skill code.
 
 ## Development
 

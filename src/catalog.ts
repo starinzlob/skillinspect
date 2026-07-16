@@ -33,6 +33,6 @@ export const ruleCatalog: RuleDefinition[] = [
 
 export function rule(id: string): RuleDefinition {
   const definition = ruleCatalog.find((item) => item.id === id);
-  if (!definition) throw new Error(`Unknown SkillProof rule: ${id}`);
+  if (!definition) throw new Error(`Unknown SkillInspect rule: ${id}`);
   return definition;
 }

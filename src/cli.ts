@@ -18,12 +18,12 @@ interface Options {
 }
 
 function help(): string {
-  return `SkillProof — AI Agent Skill quality and security audit
+  return `SkillInspect — AI Agent Skill quality and security audit
 
 Usage:
-  skillproof check [path] [--profile codex|portable] [--format text|json|github]
-  skillproof badge [path] [--output skillproof.svg]
-  skillproof rules
+  skillinspect check [path] [--profile codex|portable] [--format text|json|github]
+  skillinspect badge [path] [--output skillinspect.svg]
+  skillinspect rules
 
 Options:
   --smoke          Parse Bash, Node.js, and Python scripts without executing them
@@ -86,7 +86,7 @@ function parseArgs(argv: string[]): Options {
     if (arg === "--ignore") {
       const id = valueAfter(argv, index, arg).toUpperCase();
       if (!ruleCatalog.some((definition) => definition.id === id)) {
-        throw new Error(`Unknown rule ID: ${id}. Run \`skillproof rules\` to list valid IDs.`);
+        throw new Error(`Unknown rule ID: ${id}. Run \`skillinspect rules\` to list valid IDs.`);
       }
       ignoredRules.add(id);
       index += 1;
@@ -124,7 +124,7 @@ export function run(argv = process.argv.slice(2)): number {
     if (report.skills.length !== 1) throw new Error("Badge generation requires exactly one skill.");
     const skill = report.skills[0];
     if (!skill) throw new Error("No skill report available.");
-    const svg = badgeSvg("SkillProof", skill.grade, skill.score);
+    const svg = badgeSvg("SkillInspect", skill.grade, skill.score);
     if (options.output) {
       writeFileSync(options.output, svg, "utf8");
       console.log(`✓ Wrote ${options.output}`);
@@ -148,6 +148,6 @@ export function run(argv = process.argv.slice(2)): number {
 try {
   process.exitCode = run();
 } catch (error) {
-  console.error(`SkillProof error: ${error instanceof Error ? error.message : String(error)}`);
+  console.error(`SkillInspect error: ${error instanceof Error ? error.message : String(error)}`);
   process.exitCode = 1;
 }

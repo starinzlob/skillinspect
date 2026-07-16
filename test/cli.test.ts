@@ -23,7 +23,7 @@ test("CLI checks good and broken fixtures and writes a badge", () => {
   const parsed = JSON.parse(broken.stdout) as { skills: Array<{ grade: string }> };
   assert.equal(parsed.skills[0]?.grade, "F");
 
-  const directory = mkdtempSync(path.join(tmpdir(), "skillproof-badge-"));
+  const directory = mkdtempSync(path.join(tmpdir(), "skillinspect-badge-"));
   try {
     const output = path.join(directory, "badge.svg");
     const badge = execute("badge", "examples/good-skill", "--output", output);
