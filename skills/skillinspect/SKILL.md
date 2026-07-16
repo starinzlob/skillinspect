@@ -9,7 +9,7 @@ Audit a Skill statically before trusting or publishing it. Do not execute instal
 
 ## Workflow
 
-1. Run `npx --yes github:starinzlob/skillinspect check <path> --profile codex --smoke`.
+1. Run `npx --yes skillinspect check <path> --profile codex --smoke`.
 2. Review critical and error findings first. Treat credential exposure, root escapes, and remote shell pipelines as release blockers.
 3. Review warnings for portability, metadata, documentation size, and placeholders.
 4. Open the cited file and line before proposing a fix. Do not suppress a rule until its specific risk has been evaluated.
@@ -21,8 +21,8 @@ Audit a Skill statically before trusting or publishing it. Do not execute instal
 - Use `--format text` for an interactive review.
 - Use `--format json` for programmatic processing.
 - Use `--format github` inside GitHub Actions.
-- Run `npx --yes github:starinzlob/skillinspect badge <path> --output skillinspect.svg` to generate a local grade badge.
-- Run `npx --yes github:starinzlob/skillinspect rules` to list rule identifiers and severities.
+- Run `npx --yes skillinspect badge <path> --output skillinspect.svg` to generate a local grade badge.
+- Run `npx --yes skillinspect rules` to list rule identifiers and severities.
 
 ## Profiles
 
@@ -32,7 +32,7 @@ Audit a Skill statically before trusting or publishing it. Do not execute instal
 ## Guardrails
 
 - Keep analysis static. `--smoke` parses supported scripts for syntax but does not run their application logic.
-- Use the GitHub-qualified command above until the official registry package is published.
+- Use the official `skillinspect` npm package. Use a GitHub-qualified command only when intentionally testing an unreleased commit.
 - Never print a detected credential value; report only its location.
 - Do not automatically rewrite security-sensitive commands.
 - Explain that heuristic findings require human review.

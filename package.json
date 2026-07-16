@@ -7,6 +7,15 @@
     "skillinspect": "dist/src/cli.js"
   },
   "exports": "./dist/src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/starinzlob/skillinspect.git"
+  },
+  "homepage": "https://github.com/starinzlob/skillinspect#readme",
+  "bugs": "https://github.com/starinzlob/skillinspect/issues",
+  "publishConfig": {
+    "access": "public"
+  },
   "files": [
     "dist/src",
     "skills",
