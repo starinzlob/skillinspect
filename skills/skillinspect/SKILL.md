@@ -10,17 +10,19 @@ Audit a Skill statically before trusting or publishing it. Do not execute instal
 ## Workflow
 
 1. Run `npx --yes skillinspect check <path> --profile codex --smoke`.
-2. Review critical and error findings first. Treat credential exposure, root escapes, and remote shell pipelines as release blockers.
-3. Review warnings for portability, metadata, documentation size, and placeholders.
-4. Open the cited file and line before proposing a fix. Do not suppress a rule until its specific risk has been evaluated.
-5. Apply narrow fixes, then rerun the same command.
-6. Use `--strict` before release so warnings also fail the check.
+2. Run `npx --yes skillinspect manifest <path> --probe` before installation or first use. Review commands, environment variables, network hosts, file writes, and external side effects with the user.
+3. Review critical and error findings first. Treat credential exposure, root escapes, and remote shell pipelines as release blockers.
+4. Review warnings for portability, metadata, documentation size, and placeholders.
+5. Open the cited file and line before proposing a fix. Do not suppress a rule until its specific risk has been evaluated.
+6. Apply narrow fixes, then rerun the same command.
+7. Use `--strict` before release so warnings also fail the check.
 
 ## Outputs
 
 - Use `--format text` for an interactive review.
 - Use `--format json` for programmatic processing.
 - Use `--format github` inside GitHub Actions.
+- Use `manifest --format json` when an installer, registry, or Agent runtime needs a machine-readable capability contract.
 - Run `npx --yes skillinspect badge <path> --output skillinspect.svg` to generate a local grade badge.
 - Run `npx --yes skillinspect rules` to list rule identifiers and severities.
 
@@ -32,6 +34,7 @@ Audit a Skill statically before trusting or publishing it. Do not execute instal
 ## Guardrails
 
 - Keep analysis static. `--smoke` parses supported scripts for syntax but does not run their application logic.
+- Treat the capability manifest as evidence-backed inference, not a complete sandbox or security guarantee.
 - Use the official `skillinspect` npm package. Use a GitHub-qualified command only when intentionally testing an unreleased commit.
 - Never print a detected credential value; report only its location.
 - Do not automatically rewrite security-sensitive commands.

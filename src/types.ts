@@ -16,6 +16,31 @@ export interface Finding {
   remediation?: string;
 }
 
+export type CapabilityRisk = "low" | "medium" | "high" | "critical";
+
+export interface CapabilityEntry {
+  name: string;
+  evidence: Location[];
+}
+
+export interface RuntimeCapability extends CapabilityEntry {
+  available: boolean | null;
+}
+
+export interface SideEffectCapability extends CapabilityEntry {
+  kind: "browser-control" | "credential-access" | "external-write" | "file-delete" | "file-write" | "financial-transaction" | "network-access" | "package-install";
+}
+
+export interface CapabilityManifest {
+  schemaVersion: 1;
+  risk: CapabilityRisk;
+  commands: RuntimeCapability[];
+  environment: CapabilityEntry[];
+  networkHosts: CapabilityEntry[];
+  fileWrites: CapabilityEntry[];
+  sideEffects: SideEffectCapability[];
+}
+
 export interface SkillReport {
   root: string;
   name: string;
@@ -24,6 +49,7 @@ export interface SkillReport {
   grade: Grade;
   filesScanned: number;
   findings: Finding[];
+  capabilities: CapabilityManifest;
 }
 
 export interface WorkspaceReport {

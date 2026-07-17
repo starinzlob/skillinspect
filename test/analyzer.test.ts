@@ -57,3 +57,34 @@ Read /Users/alice/private/file.txt`, "utf8");
     rmSync(parent, { recursive: true, force: true });
   }
 });
+
+test("infers an install-time capability manifest without exposing values", () => {
+  const parent = mkdtempSync(path.join(tmpdir(), "skillinspect-capabilities-"));
+  const root = path.join(parent, "connected-skill");
+  try {
+    mkdirSync(path.join(root, "scripts"), { recursive: true });
+    writeFileSync(path.join(root, "SKILL.md"), `---
+name: connected-skill
+description: Publish a prepared report through a remote API. Use when a user explicitly requests a reviewed external report submission.
+---
+
+Run \`npm install\`, then use \`scripts/publish.sh\` to publish the report.
+`, "utf8");
+    writeFileSync(path.join(root, "scripts/publish.sh"), `#!/usr/bin/env bash
+curl -H "Authorization: Bearer \${REPORT_API_KEY}" https://api.example.com/reports
+mkdir -p ./output
+printf '%s\\n' done > ./output/result.txt
+`, { mode: 0o755 });
+
+    const report = analyzeSkill(root, options);
+    assert.equal(report.capabilities.risk, "high");
+    assert.deepEqual(report.capabilities.commands.map((item) => item.name), ["bash", "curl", "mkdir", "npm"]);
+    assert.deepEqual(report.capabilities.environment.map((item) => item.name), ["REPORT_API_KEY"]);
+    assert.deepEqual(report.capabilities.networkHosts.map((item) => item.name), ["api.example.com"]);
+    assert.equal(report.capabilities.sideEffects.some((item) => item.kind === "external-write"), true);
+    assert.equal(report.capabilities.sideEffects.some((item) => item.kind === "credential-access"), true);
+    assert.equal(JSON.stringify(report).includes("Bearer secret"), false);
+  } finally {
+    rmSync(parent, { recursive: true, force: true });
+  }
+});

@@ -1,18 +1,20 @@
 #!/usr/bin/env node
 import { writeFileSync } from "node:fs";
 import path from "node:path";
+import { probeCapabilities } from "./capabilities.js";
 import { ruleCatalog } from "./catalog.js";
-import { badgeSvg, formatGithub, formatText } from "./format.js";
+import { badgeSvg, formatGithub, formatManifestText, formatText } from "./format.js";
 import type { Profile } from "./types.js";
 import { analyzeTarget } from "./workspace.js";
 
 interface Options {
-  command: "check" | "badge" | "rules" | "help";
+  command: "check" | "manifest" | "badge" | "rules" | "help";
   target: string;
   profile: Profile;
   format: "text" | "json" | "github";
   smoke: boolean;
   strict: boolean;
+  probe: boolean;
   ignoredRules: Set<string>;
   output?: string;
 }
@@ -22,12 +24,14 @@ function help(): string {
 
 Usage:
   skillinspect check [path] [--profile codex|portable] [--format text|json|github]
+  skillinspect manifest [path] [--probe] [--format text|json]
   skillinspect badge [path] [--output skillinspect.svg]
   skillinspect rules
 
 Options:
   --smoke          Parse Bash, Node.js, and Python scripts without executing them
   --strict         Fail on warnings as well as errors
+  --probe          Check whether inferred runtime commands exist on this machine
   --ignore <id>    Ignore a rule ID; repeatable
   --profile <name> codex or portable (default: codex)
   --format <name>  text, json, or github
@@ -45,9 +49,9 @@ function valueAfter(args: string[], index: number, flag: string): string {
 function parseArgs(argv: string[]): Options {
   const rawCommand = argv[0] ?? "help";
   if (rawCommand === "--help" || rawCommand === "-h") {
-    return { command: "help", target: ".", profile: "codex", format: "text", smoke: false, strict: false, ignoredRules: new Set() };
+    return { command: "help", target: ".", profile: "codex", format: "text", smoke: false, strict: false, probe: false, ignoredRules: new Set() };
   }
-  if (!["check", "badge", "rules", "help"].includes(rawCommand)) {
+  if (!["check", "manifest", "badge", "rules", "help"].includes(rawCommand)) {
     throw new Error(`Unknown command: ${rawCommand}.`);
   }
   const command = rawCommand as Options["command"];
@@ -56,6 +60,7 @@ function parseArgs(argv: string[]): Options {
   let format: Options["format"] = "text";
   let smoke = false;
   let strict = false;
+  let probe = false;
   let output: string | undefined;
   const ignoredRules = new Set<string>();
 
@@ -66,9 +71,10 @@ function parseArgs(argv: string[]): Options {
   }
   for (; index < argv.length; index += 1) {
     const arg = argv[index];
-    if (arg === "--help" || arg === "-h") return { command: "help", target, profile, format, smoke, strict, ignoredRules };
+    if (arg === "--help" || arg === "-h") return { command: "help", target, profile, format, smoke, strict, probe, ignoredRules };
     if (arg === "--smoke") { smoke = true; continue; }
     if (arg === "--strict") { strict = true; continue; }
+    if (arg === "--probe") { probe = true; continue; }
     if (arg === "--profile") {
       const value = valueAfter(argv, index, arg);
       if (value !== "codex" && value !== "portable") throw new Error(`Unknown profile: ${value}.`);
@@ -99,7 +105,8 @@ function parseArgs(argv: string[]): Options {
     }
     throw new Error(`Unknown option: ${arg}.`);
   }
-  return { command, target, profile, format, smoke, strict, ignoredRules, ...(output ? { output } : {}) };
+  if (command === "manifest" && format === "github") throw new Error("The manifest command supports text or json format.");
+  return { command, target, profile, format, smoke, strict, probe, ignoredRules, ...(output ? { output } : {}) };
 }
 
 export function run(argv = process.argv.slice(2)): number {
@@ -120,6 +127,20 @@ export function run(argv = process.argv.slice(2)): number {
     smoke: options.smoke,
     ignoredRules: options.ignoredRules,
   });
+  if (options.probe) {
+    for (const skill of report.skills) skill.capabilities = probeCapabilities(skill.capabilities);
+  }
+  if (options.command === "manifest") {
+    if (options.format === "json") {
+      console.log(JSON.stringify({
+        target: report.target,
+        skills: report.skills.map((skill) => ({ name: skill.name, root: skill.root, manifest: skill.capabilities })),
+      }, null, 2));
+    } else {
+      console.log(formatManifestText(report));
+    }
+    return 0;
+  }
   if (options.command === "badge") {
     if (report.skills.length !== 1) throw new Error("Badge generation requires exactly one skill.");
     const skill = report.skills[0];

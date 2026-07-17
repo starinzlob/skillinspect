@@ -33,3 +33,13 @@ test("CLI checks good and broken fixtures and writes a badge", () => {
     rmSync(directory, { recursive: true, force: true });
   }
 });
+
+test("CLI prints and probes a machine-readable capability manifest", () => {
+  const result = execute("manifest", "examples/broken-skill", "--probe", "--format", "json");
+  assert.equal(result.status, 0, result.stderr);
+  const parsed = JSON.parse(result.stdout) as {
+    skills: Array<{ manifest: { risk: string; commands: Array<{ name: string; available: boolean }> } }>;
+  };
+  assert.equal(parsed.skills[0]?.manifest.risk, "critical");
+  assert.equal(parsed.skills[0]?.manifest.commands.some((item) => item.name === "curl" && item.available), true);
+});

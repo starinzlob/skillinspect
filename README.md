@@ -8,6 +8,7 @@ SkillInspect inspects a `SKILL.md` folder without executing its installation ins
 
 ```bash
 npx --yes skillinspect check ./skills/my-skill
+npx --yes skillinspect manifest ./skills/my-skill --probe
 npx --yes skillinspect check . --smoke --strict
 npx --yes skillinspect check . --format github
 ```
@@ -27,6 +28,18 @@ Use `--profile codex` for strict Codex metadata or `--profile portable` for cros
 - user-specific absolute paths, escaping symlinks, and world-writable files;
 - Bash, Node.js, and Python syntax with the opt-in `--smoke` parser.
 
+## Capability manifest
+
+`skillinspect manifest` statically infers what a Skill may need or change before any bundled code runs:
+
+- runtime commands and whether they exist locally with `--probe`;
+- environment variables and credential names, never their values;
+- external network hosts;
+- local file writes and deletes;
+- browser control, package installation, external publishing, and financial side effects.
+
+Every inferred capability includes source evidence. The manifest is available as human-readable text or JSON so installers, registries, and Agent runtimes can require informed approval before execution.
+
 ## Scoring
 
 Every skill starts at 100:
@@ -44,6 +57,7 @@ Grades are A (90+), B (80+), C (70+), D (60+), and F (below 60). Scores are a pr
 
 ```bash
 npx --yes skillinspect check [path] [--profile codex|portable]
+npx --yes skillinspect manifest [path] [--probe] [--format text|json]
 npx --yes skillinspect badge [path] [--output skillinspect.svg]
 npx --yes skillinspect rules
 ```
@@ -52,6 +66,7 @@ Additional options:
 
 - `--smoke`: parse supported scripts without running their application logic;
 - `--strict`: return a failing exit code for warnings;
+- `--probe`: check inferred runtime commands against the current machine without running Skill code;
 - `--ignore SP123`: suppress a reviewed rule ID, repeatable.
 
 If a directory contains multiple nested `SKILL.md` files, SkillInspect reports every discovered Skill and an aggregate score.

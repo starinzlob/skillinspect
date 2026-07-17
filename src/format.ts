@@ -1,5 +1,5 @@
 import path from "node:path";
-import type { Finding, SkillReport, WorkspaceReport } from "./types.js";
+import type { CapabilityEntry, Finding, RuntimeCapability, SkillReport, WorkspaceReport } from "./types.js";
 
 const severityIcon = {
   critical: "✖",
@@ -44,6 +44,41 @@ export function formatGithub(report: WorkspaceReport): string {
     return `::${level} file=${file}${line},title=${item.ruleId} ${escapeCommand(item.title)}::${escapeCommand(item.message)}`;
   }));
   return lines.length ? lines.join("\n") : "SkillInspect found no issues.";
+}
+
+function evidence(entry: CapabilityEntry): string {
+  const first = entry.evidence[0];
+  if (!first) return "unknown source";
+  return `${first.path}${first.line ? `:${first.line}` : ""}`;
+}
+
+function names(items: CapabilityEntry[]): string {
+  if (items.length === 0) return "none detected";
+  return items.map((item) => `${item.name} (${evidence(item)})`).join(", ");
+}
+
+function runtimeNames(items: RuntimeCapability[]): string {
+  if (items.length === 0) return "none detected";
+  return items.map((item) => {
+    const status = item.available === null ? "not probed" : item.available ? "available" : "missing";
+    return `${item.name} [${status}] (${evidence(item)})`;
+  }).join(", ");
+}
+
+export function formatManifestText(report: WorkspaceReport): string {
+  const lines: string[] = [];
+  for (const skill of report.skills) {
+    const manifest = skill.capabilities;
+    lines.push(`${skill.name}: ${manifest.risk.toUpperCase()} capability risk`);
+    lines.push(`  Commands: ${runtimeNames(manifest.commands)}`);
+    lines.push(`  Environment: ${names(manifest.environment)}`);
+    lines.push(`  Network hosts: ${names(manifest.networkHosts)}`);
+    lines.push(`  File writes: ${names(manifest.fileWrites)}`);
+    lines.push(`  Side effects: ${names(manifest.sideEffects)}`);
+    lines.push("");
+  }
+  lines.push("Static inference only. Review cited lines before granting access or running the Skill.");
+  return lines.join("\n");
 }
 
 export function badgeSvg(label: string, grade: string, score: number): string {

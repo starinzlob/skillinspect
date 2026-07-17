@@ -2,6 +2,7 @@ import { existsSync, readFileSync, realpathSync } from "node:fs";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import { parseDocument } from "yaml";
+import { emptyCapabilityManifest, inferCapabilities } from "./capabilities.js";
 import { rule } from "./catalog.js";
 import { listSkillFiles, type SkillFile } from "./discovery.js";
 import { parseSkillDocument } from "./frontmatter.js";
@@ -180,7 +181,7 @@ export function analyzeSkill(rootInput: string, options: CheckOptions): SkillRep
   const skillFile = path.join(root, "SKILL.md");
   if (!existsSync(skillFile)) {
     const findings = [finding("SP001", `No SKILL.md found at ${root}.`, { path: "SKILL.md" })];
-    return { root, name: path.basename(root), profile: options.profile, score: 70, grade: "C", filesScanned: 0, findings };
+    return { root, name: path.basename(root), profile: options.profile, score: 70, grade: "C", filesScanned: 0, findings, capabilities: emptyCapabilityManifest() };
   }
 
   const content = readFileSync(skillFile, "utf8");
@@ -237,5 +238,6 @@ export function analyzeSkill(rootInput: string, options: CheckOptions): SkillRep
     grade: gradeScore(score),
     filesScanned: files.length,
     findings: filtered,
+    capabilities: inferCapabilities(files),
   };
 }

@@ -1,4 +1,5 @@
 export * from "./analyzer.js";
+export * from "./capabilities.js";
 export * from "./catalog.js";
 export * from "./discovery.js";
 export * from "./format.js";
